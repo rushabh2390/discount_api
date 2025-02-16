@@ -20,5 +20,5 @@ class ItemUpdate(BaseModel):
     inventory: Optional[int] = None
 
 
-class ItemResponse(ItemBase):
+class Item(ItemBase):
     id: int

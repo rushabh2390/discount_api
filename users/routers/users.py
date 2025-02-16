@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from typing import List, Optional
-from ..schemas import users as user_schemas
+from users.schemas import users as user_schemas
+from utils.utils import generate_discount_code
 from config.config import settings
 from databases.database import data
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
@@ -79,10 +80,7 @@ def read_users_me(current_user: user_schemas.TokenData = Depends(get_current_use
 def generate_discount(current_user: user_schemas.TokenData = Depends(get_current_user)):
     if current_user.email:
         if current_user.is_admin:
-            length = random.randint(8, 12)
-            random_string = ''.join(random.choices(
-                string.ascii_letters + string.digits, k=length))
-            data.unused_discount.append(random_string)
+            random_string = generate_discount_code()
             return user_schemas.DiscountCouponData(coupon_code=random_string)
         else:
             raise HTTPException(

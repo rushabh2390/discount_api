@@ -3,7 +3,7 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 FORMAT = '%(asctime)s %(clientip)-15s %(user)-8s %(message)s'
-logging.basicConfig(filename='userlogging.log',
+logging.basicConfig(filename='ecommerce.log',
                     level=logging.INFO, format=FORMAT)
 
 

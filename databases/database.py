@@ -1,6 +1,8 @@
+# in memory database
+import random
 class Data:
-    unused_discount = []
-    used_discount = []
+    discount_codes = {}
+    used_discount_codes = {}
     users = {"admin@example.com": {
         "username": "Admin",
         "password": "$2b$12$xBKj2hTLP.1Adci6ujCtzeeOazCg5gSZUKQtoBo06AESD4E0jf.H.",  # admin
@@ -55,5 +57,6 @@ class Data:
     orders = []
     payments = []
     max_id = 21
+    nth_order = random.randint(1,9)
 
 data = Data()

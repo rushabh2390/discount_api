@@ -1,12 +1,12 @@
 from fastapi import HTTPException, Depends, APIRouter
 from typing import Optional, List
-from ..schemas import items as items_schemas
+from items.schemas import items as items_schemas
 from databases.database import data
 
 router = APIRouter(prefix="/items")
 
 
-@router.get("/", response_model=List[items_schemas.ItemResponse])
+@router.get("/", response_model=List[items_schemas.Item])
 async def get_items(category: Optional[str] = None):
     cat_items = []
     if category:
@@ -20,7 +20,7 @@ async def get_items(category: Optional[str] = None):
     return cat_items
 
 
-@router.post("/", response_model=items_schemas.ItemResponse)
+@router.post("/", response_model=items_schemas.Item)
 async def create_item(item: items_schemas.ItemCreate):
     new_item = item.model_dump()
     new_item["id"] = data.max_id
@@ -29,7 +29,7 @@ async def create_item(item: items_schemas.ItemCreate):
     return new_item
 
 
-@router.patch("/{id}", response_model=items_schemas.ItemResponse)
+@router.patch("/{id}", response_model=items_schemas.Item)
 async def update_item(id: int, item: items_schemas.ItemUpdate):
     existing_item = None
     for item in data.items:
