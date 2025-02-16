@@ -1,6 +1,7 @@
 
 from fastapi import FastAPI, Response
 from users.routers.users import router as user_router
+from items.routers.items import router as item_router
 from fastapi.middleware.cors import CORSMiddleware
 from typing import Union
 import logging
@@ -10,6 +11,7 @@ logging.basicConfig(level=logging.DEBUG)
 # App Object
 app = FastAPI()
 app.include_router(user_router, tags=["users"])
+app.include_router(item_router, tags=["items"])
 origins = ["*"]
 
 
