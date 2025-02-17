@@ -1,7 +1,7 @@
 # in memory database
 import random
 class Data:
-    discount_codes = {}
+    discount_codes = {"SAVE10":0.10}
     used_discount_codes = {}
     users = {"admin@example.com": {
         "username": "Admin",

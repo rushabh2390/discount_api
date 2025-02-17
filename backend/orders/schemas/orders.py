@@ -8,7 +8,7 @@ class CartItem(Item):
 
 
 class Discount(BaseModel):
-    code: str
+    code: Optional[str] = None
 
 
 class CheckoutResponse(BaseModel):

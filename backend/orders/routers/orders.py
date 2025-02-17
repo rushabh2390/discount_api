@@ -83,12 +83,11 @@ async def get_orders():
 @router.get("/discount_code", response_model=Optional[order_schemas.Discount])
 async def generate_admin_discount_code(order_number: int):
     """Generates a discount code if the nth order condition is met"""
+    code = None
     if order_number % data.nth_order == 0:
         discount_value = 0.10
         code = generate_discount_code(discount_value)
-        return order_schemas.Discount(code=code)
-    else:
-        return None
+    return order_schemas.Discount(code=code)
 
 
 @router.get("/stats", response_model=order_schemas.AdminStats)
