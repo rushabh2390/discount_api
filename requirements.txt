@@ -1,7 +1,0 @@
-fastapi[all]
-setuptools
-uvicorn
-python-jose[cryptography]
-passlib[bcrypt]
-pydantic-settings
-pytest
