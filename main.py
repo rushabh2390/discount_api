@@ -26,9 +26,9 @@ app.add_middleware(
 )
 
 
-@app.get("/", status_code=200)
-async def read_root():
-    return Response("server is up and running")
+# @app.get("/", status_code=200)
+# async def read_root():
+#     return Response("server is up and running")
 
 # @app.exception_handler(HTTPException)
 # async def http_exception_handler(request, exc):

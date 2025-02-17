@@ -11,6 +11,14 @@ router = APIRouter(prefix="/orders")
 
 @router.post("/cart", response_model=List[order_schemas.CartItem], status_code=200)
 async def add_to_cart(item: order_schemas.CartItem):
+    """add item to cart
+
+    Args:
+        item (order_schemas.CartItem): item data to add
+
+    Returns:
+        json: return cart data
+    """
     data.cart.append(item.model_dump())
     # inventory calculation is not added here..
     return data.cart
@@ -18,11 +26,26 @@ async def add_to_cart(item: order_schemas.CartItem):
 
 @router.get("/cart", response_model=List[order_schemas.CartItem], status_code=200)
 async def view_cart():
+    """return cart data
+
+    Returns:
+       json: return cart data
+    """
     return data.cart
 
 
 @router.post("/checkout", response_model=order_schemas.CheckoutResponse, status_code=200)
 async def checkout(discount: Optional[order_schemas.Discount] = None):
+    """checkout to make order
+
+    Args:
+        discount (Optional[order_schemas.Discount], optional): 
+
+    Raises:
+        HTTPException:
+    Returns:
+        json: return checkout information
+    """
     total_before_discount = sum(
         item["price"] * item["quantity"] for item in data.cart)
     discount_amount = 0.0
@@ -71,18 +94,35 @@ async def checkout(discount: Optional[order_schemas.Discount] = None):
 
 @router.delete("/cart/clear", status_code=200)
 async def clear_cart():
+    """clear cart information
+
+    Returns:
+        json: clear cart
+    """
     data.cart.clear()
     return {"message": "Cart cleared"}
 
 
 @router.get("/orders", status_code=200)
 async def get_orders():
+    """get all orders
+
+    Returns:
+        json: return orders data
+    """
     return data.orders
 
 
 @router.get("/discount_code", response_model=Optional[order_schemas.Discount])
 async def generate_admin_discount_code(order_number: int):
-    """Generates a discount code if the nth order condition is met"""
+    """Generates a discount code if the nth order condition is met
+
+    Args:
+        order_number (int): order number
+
+    Returns:
+        json: return discount token
+    """
     code = None
     if order_number % data.nth_order == 0:
         discount_value = 0.10
@@ -92,7 +132,14 @@ async def generate_admin_discount_code(order_number: int):
 
 @router.get("/stats", response_model=order_schemas.AdminStats)
 async def get_admin_stats(current_user: user_schemas.TokenData = Depends(get_current_user)):
-    """Returns admin statistics."""
+    """Returns admin statistics.
+
+    Raises:
+        HTTPException:
+
+    Returns:
+        json: return order statistics only to admin
+    """
     if current_user.is_admin:
         total_items_purchased = 0
         total_purchase_amount = 0.0

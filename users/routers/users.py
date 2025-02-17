@@ -25,6 +25,18 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
+    """create access token
+
+    Args:
+        data (dict):data that need to be encoded with token.
+        expires_delta (Optional[timedelta], optional): token life time duaration
+
+    Raises:
+        HTTPException: _description_
+
+    Returns:
+        str: return encoded jwt token
+    """
     try:
         to_encode = data.copy()
         if expires_delta:
@@ -41,6 +53,16 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
 
 
 def decode_access_token(token: str):
+    """decoding token
+
+    Args:
+        token (str): 
+
+    Raises:
+        HTTPException: Invalid token
+    Returns:
+        TokenData: return decoded token data
+    """
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[
                              settings.ALGORITHM])
@@ -56,19 +78,54 @@ def decode_access_token(token: str):
 
 
 def get_current_user(token: str = Depends(oauth2_scheme)):
+    """return current user
+
+    Args:
+        token (str): token. Defaults to Depends(oauth2_scheme).
+
+    Returns:
+        json: decode the token information
+    """
     return decode_access_token(token)
 
 
 def get_password_hash(password):
+    """return password hash
+
+    Args:
+        password (str): passowrd
+
+    Returns:
+        str: return has password
+    """
     return pwd_context.hash(password)
 
 
 def verify_password(plain_password, hashed_password):
+    """verify password
+
+    Args:
+        plain_password (str): plain password
+        hashed_password (bool): cipher assword
+
+    Returns:
+        boolean: verify plain password with hash password
+    """
     return pwd_context.verify(plain_password, hashed_password)
 
 
 @router.get("/about_me",  response_model=user_schemas.User, status_code=200)
 def read_users_me(current_user: user_schemas.TokenData = Depends(get_current_user)):
+    """return user details
+    Args:
+        current_user (user_schemas.TokenData, optional): Token information
+
+    Raises:
+        HTTPException: 
+
+    Returns:
+        json: retun current user information
+    """
     if current_user.email:
         if current_user.email in data.users:
             return data.users[current_user.email]
@@ -78,6 +135,17 @@ def read_users_me(current_user: user_schemas.TokenData = Depends(get_current_use
 
 @router.get("/generate_discount",  response_model=user_schemas.DiscountCouponData, status_code=200)
 def generate_discount(current_user: user_schemas.TokenData = Depends(get_current_user)):
+    """generate dicount
+
+    Args:
+        current_user (user_schemas.TokenData, optional): Token information
+
+    Raises:
+        HTTPException: 
+
+    Returns:
+        json: return Discount code
+    """
     if current_user.email:
         if current_user.is_admin:
             random_string = generate_discount_code(data.discount_value)
@@ -89,6 +157,16 @@ def generate_discount(current_user: user_schemas.TokenData = Depends(get_current
 
 @router.post("/", response_model=user_schemas.User, status_code=201)
 def create_user(user: user_schemas.UserCreate):
+    """creating user
+    Args:
+        user (user_schemas.UserCreate): create user
+
+    Raises:
+        HTTPException: 
+
+    Returns:
+       json: User Information
+    """
     user.password = get_password_hash(user.password)
     user = user.model_dump()
     print(user)
@@ -120,6 +198,17 @@ def create_user(user: user_schemas.UserCreate):
 
 @router.get("/{email}", response_model=user_schemas.User, status_code=200)
 def read_user(email: str):
+    """read user
+
+    Args:
+        email (str): email value
+
+    Raises:
+        HTTPException: _description_
+
+    Returns:
+        json: User Information
+    """
     if email in data.users:
         return data.users[email]
     else:
@@ -142,8 +231,18 @@ def read_user(email: str):
 
 @router.post("/login", response_model=user_schemas.Token, status_code=200)
 def login_user(login_user: OAuth2PasswordRequestForm = Depends()):
+    """login user
+
+    Args:
+        login_user (OAuth2PasswordRequestForm, optional):username and password data
+
+    Raises:
+        HTTPException:
+
+    Returns:
+       json: return user access token
+    """
     user = None
-    print(login_user.username, login_user.password)
     if login_user.username in data.users:
         user = data.users[login_user.username]
     else:

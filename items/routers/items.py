@@ -8,6 +8,17 @@ router = APIRouter(prefix="/items")
 
 @router.get("/", response_model=List[items_schemas.ItemCreate])
 async def get_items(category: Optional[str] = None):
+    """return store items
+
+    Args:
+        category (Optional[str], optional): item's category
+
+    Raises:
+        HTTPException:
+
+    Returns:
+        json: return sotre item list
+    """
     cat_items = []
     if category:
         for item in data.items:
