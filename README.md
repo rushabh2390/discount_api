@@ -36,3 +36,6 @@ pip install -r requirements.txt
 ````
 pytest
 ````
+![Api swagger](api_swagger.jpg)
+
+[Postman Collection](api_postman_collection.json)
