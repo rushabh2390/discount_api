@@ -6,11 +6,14 @@ class ItemBase(BaseModel):
     name: str
     category: str
     price: float
+
+
+class Item(ItemBase):
+    id: int
+
+
+class ItemCreate(Item):
     inventory: int
-
-
-class ItemCreate(ItemBase):
-    pass
 
 
 class ItemUpdate(BaseModel):
@@ -18,7 +21,3 @@ class ItemUpdate(BaseModel):
     category: Optional[str] = None
     price: Optional[float] = None
     inventory: Optional[int] = None
-
-
-class Item(ItemBase):
-    id: int

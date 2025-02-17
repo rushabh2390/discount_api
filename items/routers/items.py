@@ -6,7 +6,7 @@ from databases.database import data
 router = APIRouter(prefix="/items")
 
 
-@router.get("/", response_model=List[items_schemas.Item])
+@router.get("/", response_model=List[items_schemas.ItemCreate])
 async def get_items(category: Optional[str] = None):
     cat_items = []
     if category:
@@ -20,16 +20,16 @@ async def get_items(category: Optional[str] = None):
     return cat_items
 
 
-@router.post("/", response_model=items_schemas.Item)
+@router.post("/", response_model=items_schemas.ItemCreate)
 async def create_item(item: items_schemas.ItemCreate):
     new_item = item.model_dump()
-    new_item["id"] = data.max_id
-    data.max_id += 1
+    new_item["id"] = data.max_item_id
+    data.max_item_id += 1
     data.items.append(new_item)
     return new_item
 
 
-@router.patch("/{id}", response_model=items_schemas.Item)
+@router.patch("/{id}", response_model=items_schemas.ItemCreate)
 async def update_item(id: int, item: items_schemas.ItemUpdate):
     existing_item = None
     for item in data.items:

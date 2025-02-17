@@ -80,7 +80,7 @@ def read_users_me(current_user: user_schemas.TokenData = Depends(get_current_use
 def generate_discount(current_user: user_schemas.TokenData = Depends(get_current_user)):
     if current_user.email:
         if current_user.is_admin:
-            random_string = generate_discount_code()
+            random_string = generate_discount_code(data.discount_value)
             return user_schemas.DiscountCouponData(coupon_code=random_string)
         else:
             raise HTTPException(
@@ -91,11 +91,13 @@ def generate_discount(current_user: user_schemas.TokenData = Depends(get_current
 def create_user(user: user_schemas.UserCreate):
     user.password = get_password_hash(user.password)
     user = user.model_dump()
+    print(user)
     if user["email"] not in data.users:
         data.users.update({user["email"]: user})
     else:
         raise HTTPException(
             status_code=409, detail="User with existing email is already exist")
+
     return user
 
 
@@ -141,6 +143,7 @@ def read_user(email: str):
 @router.post("/login", response_model=user_schemas.Token, status_code=200)
 def login_user(login_user: OAuth2PasswordRequestForm = Depends()):
     user = None
+    print(login_user.username, login_user.password)
     if login_user.username in data.users:
         user = data.users[login_user.username]
     else:
@@ -153,11 +156,10 @@ def login_user(login_user: OAuth2PasswordRequestForm = Depends()):
             status_code=401, detail="Incorrect email/username or password")
     else:
         if verify_password(login_user.password, user["password"]):
-            print(user)
             access_token_expires = timedelta(
                 minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
             access_token = create_access_token(
-                data={"sub": user["email"], "is_admin": user["is_admin_user"]}, expires_delta=access_token_expires)
+                data={"sub": user["email"], "is_admin": user["isadminuser"]}, expires_delta=access_token_expires)
             return {"access_token": access_token, "token_type": "bearer"}
         else:
             raise HTTPException(

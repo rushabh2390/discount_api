@@ -9,8 +9,8 @@ class Data:
         "fullname": "Administrator",
         "email": "admin@example.com",
         "date_of_birth": "2000-03-02",
-        "is_admin_user": True,
-        "is_staff_user": True
+        "isadminuser": True,
+        "isstaffuser": True
     }}
     items = [
         {"id": 1, "name": "Laptop", "category": "Electronics",
@@ -56,7 +56,10 @@ class Data:
     ]
     orders = []
     payments = []
-    max_id = 21
-    nth_order = random.randint(1,9)
+    max_item_id = 21
+    nth_order = 3 # random.randint(1,9)
+    cart = []
+    discount_value = 0.10   # default making 10 percentage
+
 
 data = Data()

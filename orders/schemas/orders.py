@@ -2,17 +2,21 @@ from pydantic import BaseModel
 from typing import List, Optional, Dict
 from items.schemas.items import Item
 
+
 class CartItem(Item):
-    pass
+    quantity: int
+
 
 class Discount(BaseModel):
     code: str
+
 
 class CheckoutResponse(BaseModel):
     total_before_discount: float
     discount_amount: float
     total_after_discount: float
     applied_discount: Optional[str] = None
+
 
 class AdminStats(BaseModel):
     total_items_purchased: int

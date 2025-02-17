@@ -4,14 +4,14 @@ from datetime import datetime
 from passlib.context import CryptContext
 
 
-class UserBase(BaseModel):
+class User(BaseModel):
     username: str
     password: str
     fullname: str
     email: str
     date_of_birth: datetime
-    is_admin_user: Optional[bool] = False
-    is_staff_user: Optional[bool] = False
+    isadminuser: Optional[bool] = False
+    isstaffuser: Optional[bool] = False
 
     @field_validator("password")
     def password_length(cls, v):
@@ -21,29 +21,22 @@ class UserBase(BaseModel):
         return v
 
 
-class UserCreate(UserBase):
+class UserCreate(User):
     pass
 
 
-class UserUpdate(UserBase):
+class UserUpdate():
     username: Optional[str] = None
     password: Optional[str] = None
     fullname: Optional[str] = None
     date_of_birth: Optional[datetime] = None
     email: Optional[str] = None
-    is_admin_user: Optional[bool] = None
-    is_staff_user: Optional[bool] = None
+    isadminuser: Optional[bool] = None
+    isstaffuser: Optional[bool] = None
 
 
 class UserDelete(BaseModel):
-    id: int
-
-
-class User(UserBase):
-    id: int
-
-    class Config:
-        from_attributes = True
+    email: str
 
 
 class UserLogin(BaseModel):
@@ -67,6 +60,7 @@ class Token(BaseModel):
 class TokenData(BaseModel):
     email: Optional[str] = None
     is_admin: Optional[bool] = False
+
 
 class DiscountCouponData(BaseModel):
     coupon_code: Optional[str] = None

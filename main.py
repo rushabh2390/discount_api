@@ -30,6 +30,6 @@ app.add_middleware(
 async def read_root():
     return Response("server is up and running")
 
-@app.exception_handler(HTTPException)
-async def http_exception_handler(request, exc):
-    return {"error": exc.detail}
+# @app.exception_handler(HTTPException)
+# async def http_exception_handler(request, exc):
+#     return {"error": exc.detail}
